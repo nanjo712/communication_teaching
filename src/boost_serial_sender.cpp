@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
         }
         else 
         {
-            std::cout << "Writing " << cnt[0] << " to " << port_name << std::endl;     
+            std::cout << "Writing " << (int)cnt[0] << " to " << port_name << std::endl;     
         }
         cnt[0] ++;
         using namespace std::chrono_literals;
