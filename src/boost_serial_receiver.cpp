@@ -28,14 +28,14 @@ int main(int argc, char* argv[])
     boost::system::error_code ec;
     while (1)
     {
-        serial.write_some(boost::asio::buffer(cnt), ec);
+        serial.read_some(boost::asio::buffer(cnt), ec);
         if (ec)
         {
-            std::cerr << "Error when writing to " << port_name << std::endl;
+            std::cerr << "Error when reading to " << port_name << std::endl;
         }
         else 
         {
-            std::cout << "Writing " << cnt[0] << " to " << port_name << std::endl;     
+            std::cout << "Reading " << cnt[0] << " to " << port_name << std::endl;     
         }
         cnt[0] ++;
         using namespace std::chrono_literals;
