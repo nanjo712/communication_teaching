@@ -19,6 +19,5 @@ int main(int argc, char* argv[])
     serial.set_option(boost::asio::serial_port::stop_bits(boost::asio::serial_port::stop_bits::one));
     serial.set_option(boost::asio::serial_port::parity(boost::asio::serial_port::parity::none));
     serial.set_option(boost::asio::serial_port::flow_control(boost::asio::serial_port::flow_control::none));
-
     
 }

@@ -38,7 +38,7 @@ Serial::Serial(std::string serialName) : fd(open(serialName.c_str(), O_RDWR | O_
 
 Serial::~Serial()
 {
-    ::close(fd);
+    close();
 }
 
 void Serial::close()

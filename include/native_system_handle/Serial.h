@@ -2,7 +2,7 @@
 #define SERIAL_H_
 
 #include <fcntl.h>
-#include <stdexcept>
+#include <string>
 #include <unistd.h>
 
 void configureSerial(int fd);
