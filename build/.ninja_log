@@ -1,8 +1,0 @@
-# ninja log v6
-1	204	1727224828023342163	CMakeFiles/native_system_handle.dir/src/Serial.cpp.o	fb5e499c2d4acd0
-207	237	1727225591820011461	libnative_system_handle.a	d995f1018764b39e
-2	207	1727225591613344793	CMakeFiles/native_system_handle.dir/src/native_system_handle.cpp.o	d12c2a9a705c23d0
-1	336	1727226091620013177	CMakeFiles/native_handle_sender.dir/src/native_handle_sender.cpp.o	9d4311c2838a9969
-336	389	1727226091956679844	native_handle_sender	a4718212ea6de0e6
-1	337	1727226042560013008	CMakeFiles/native_handle_recevier.dir/src/native_handle_recevier.cpp.o	710a94d1ab649f05
-338	389	1727226042896679676	native_handle_recevier	b801c4c487be28a5
