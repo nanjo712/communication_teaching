@@ -1,0 +1,20 @@
+[
+{
+  "directory": "/home/woshiren/communication_teaching/build",
+  "command": "/usr/bin/g++ -I/home/woshiren/communication_teaching/include -g -o CMakeFiles/native_system_handle.dir/src/native_system_handle.cpp.o -c /home/woshiren/communication_teaching/src/native_system_handle.cpp",
+  "file": "/home/woshiren/communication_teaching/src/native_system_handle.cpp",
+  "output": "CMakeFiles/native_system_handle.dir/src/native_system_handle.cpp.o"
+},
+{
+  "directory": "/home/woshiren/communication_teaching/build",
+  "command": "/usr/bin/g++ -I/home/woshiren/communication_teaching/include -g -o CMakeFiles/native_handle_sender.dir/src/native_handle_sender.cpp.o -c /home/woshiren/communication_teaching/src/native_handle_sender.cpp",
+  "file": "/home/woshiren/communication_teaching/src/native_handle_sender.cpp",
+  "output": "CMakeFiles/native_handle_sender.dir/src/native_handle_sender.cpp.o"
+},
+{
+  "directory": "/home/woshiren/communication_teaching/build",
+  "command": "/usr/bin/g++ -I/home/woshiren/communication_teaching/include -g -o CMakeFiles/native_handle_recevier.dir/src/native_handle_recevier.cpp.o -c /home/woshiren/communication_teaching/src/native_handle_recevier.cpp",
+  "file": "/home/woshiren/communication_teaching/src/native_handle_recevier.cpp",
+  "output": "CMakeFiles/native_handle_recevier.dir/src/native_handle_recevier.cpp.o"
+}
+]

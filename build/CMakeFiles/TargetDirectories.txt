@@ -1,0 +1,7 @@
+/home/woshiren/communication_teaching/build/CMakeFiles/native_system_handle.dir
+/home/woshiren/communication_teaching/build/CMakeFiles/native_handle_sender.dir
+/home/woshiren/communication_teaching/build/CMakeFiles/native_handle_recevier.dir
+/home/woshiren/communication_teaching/build/CMakeFiles/run_sender.dir
+/home/woshiren/communication_teaching/build/CMakeFiles/run_receiver.dir
+/home/woshiren/communication_teaching/build/CMakeFiles/edit_cache.dir
+/home/woshiren/communication_teaching/build/CMakeFiles/rebuild_cache.dir
