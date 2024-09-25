@@ -23,13 +23,3 @@ add_executable(
     src/native_handle_recevier.cpp 
 )
 target_link_libraries(native_handle_recevier PRIVATE native_system_handle)
-
-add_custom_target(
-    run_sender 
-    COMMAND native_handle_sender /dev/ttyUSB0
-)
-
-add_custom_target(
-    run_receiver 
-    COMMAND native_handle_recevier /dev/ttyUSB1
-)

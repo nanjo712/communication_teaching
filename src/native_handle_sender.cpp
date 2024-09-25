@@ -5,7 +5,6 @@
 
 int main(int argc, char *argv[])
 {
-    std::cout << std::endl;
     if (argc < 2 || argv[1] == NULL)
     {
         std::cout << "Please give a seria name\n";
