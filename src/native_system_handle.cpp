@@ -1,5 +1,5 @@
 #include "native_system_handle/Serial.h"
-
+#include <stdexcept>
 #include <termios.h>
 
 void configureSerial(int fd) {
