@@ -255,7 +255,9 @@ std::string command_handler(const std::string &command)
         }
         else
         {
-            return base64_encode(encrypt(public_key, content)) + "\n";
+            return base64_encode(encrypt(public_key,
+                                         content + " " + base64_decode(flag))) +
+                   "\n";
         }
     }
     else if (command.substr(0, 7) == "decrypt")
