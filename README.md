@@ -56,3 +56,21 @@ BUPT-RobotTeam-学号
 - 接收backend的回复，打印到控制台
 
 **你可以通过先向串口发送help来得到backend的指令格式，随后再继续设计你的程序**
+
+## 网络
+
+### 实验 使用socket进行通信
+
+运行boost_socket_server和boost_socket_client。
+
+Server将绑定在本机的12345端口上，Client将连接到本机的12345端口。
+
+基础实现中，Server会接收Client发送的字符串，并打印出来；每次运行Client，Server都会收到一个“Hello, World!”。
+
+**你需要实现boost_socket_server和boost_socket_client，其功能如下：**
+
+- 向Server发送`time`，Server会返回当前时间
+- 向Server发送`echo <your string>`，Server会返回你发送的字符串
+- 向Server发送`exit`，Server会关闭连接，Client会退出
+
+

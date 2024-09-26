@@ -11,6 +11,13 @@ find_package(Threads REQUIRED)
 set(CMAKE_CXX_STANDARD 17)
 
 add_library(
+    Utils
+    src/Utils/base64.cpp 
+)
+target_link_libraries(Utils PRIVATE OpenSSL::SSL OpenSSL::Crypto)
+target_include_directories(Utils PUBLIC include)
+
+add_library(
     native_system_handle
     src/Serial/Serial.cpp
     src/Socket/Socket.cpp 
@@ -45,10 +52,23 @@ add_executable(
     boost_serial_backend
     src/Serial/boost_serial_backend.cpp
 )
-target_link_libraries(boost_serial_backend PRIVATE Boost::system OpenSSL::SSL OpenSSL::Crypto Threads::Threads)
+target_link_libraries(boost_serial_backend PRIVATE Boost::system OpenSSL::SSL OpenSSL::Crypto Threads::Threads Utils)
+target_include_directories(boost_serial_backend PRIVATE include)
 
 add_executable(
     boost_serial_console
     src/Serial/boost_serial_console.cpp
 )
 target_link_libraries(boost_serial_console PRIVATE Boost::system Threads::Threads)
+
+add_executable(
+    boost_socket_server 
+    src/Socket/boost_socket_server.cpp
+)
+target_link_libraries(boost_socket_server PRIVATE Boost::system Threads::Threads)
+
+add_executable(
+    boost_socket_client
+    src/Socket/boost_socket_client.cpp
+)
+target_link_libraries(boost_socket_client PRIVATE Boost::system Threads::Threads)
