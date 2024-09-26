@@ -1,3 +1,4 @@
+#include <openssl/bio.h>
 #include <openssl/err.h>
 #include <openssl/evp.h>
 #include <openssl/pem.h>
@@ -6,6 +7,7 @@
 
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/serial_port.hpp>
+#include <cassert>
 #include <cstring>
 #include <filesystem>
 #include <iostream>
@@ -125,12 +127,14 @@ void generate_rsa_keypair(int key_length, const char *private_key_file,
 std::string private_key_file_name = "private.pem";
 std::string public_key_file_name = "public.pem";
 
-void show_usage()
+std::string show_usage()
 {
-    std::cout << "Usage:\n";
-    std::cout << "  help                - Display this help message\n";
-    std::cout << "  encrypt <content>   - Encrypt the provided content\n";
-    std::cout << "  decrypt <content>   - Decrypt the provided content\n";
+    std::stringstream ss;
+    ss << "Usage:\n";
+    ss << "  help                - Display this help message\n";
+    ss << "  encrypt <content>   - Encrypt the provided content\n";
+    ss << "  decrypt <content>   - Decrypt the provided content\n";
+    return ss.str();
 }
 
 std::string encrypt(EVP_PKEY *public_key, const std::string &content)
@@ -181,11 +185,102 @@ std::string decrypt(EVP_PKEY *private_key, const std::string &encrypted)
     return decrypted;
 }
 
+std::string base64_encode(const std::string &input)
+{
+    // 创建 BIO
+    BIO *b64 = BIO_new(BIO_f_base64());
+    BIO *bio = BIO_new(BIO_s_mem());
+    bio = BIO_push(b64, bio);
+
+    // 设置不换行
+    BIO_set_flags(bio, BIO_FLAGS_BASE64_NO_NL);
+
+    // 编写数据
+    BIO_write(bio, input.data(), input.size());
+    BIO_flush(bio);
+
+    // 获取编码结果
+    BUF_MEM *bufferPtr;
+    BIO_get_mem_ptr(bio, &bufferPtr);
+    BIO_set_close(bio, BIO_NOCLOSE);
+    BIO_free_all(bio);
+
+    // 返回编码字符串
+    return std::string(bufferPtr->data, bufferPtr->length);
+}
+
+std::string base64_decode(const std::string &input)
+{
+    // 创建 BIO
+    BIO *b64 = BIO_new(BIO_f_base64());
+    BIO *bio = BIO_new_mem_buf(input.data(), input.size());
+    bio = BIO_push(b64, bio);
+
+    // 设置不换行
+    BIO_set_flags(bio, BIO_FLAGS_BASE64_NO_NL);
+
+    // 解码数据
+    std::string output;
+    char buffer[512];  // 临时缓冲区
+    int decoded_length;
+
+    while ((decoded_length = BIO_read(bio, buffer, sizeof(buffer))) > 0)
+    {
+        output.append(buffer, decoded_length);
+    }
+
+    BIO_free_all(bio);  // 释放 BIO
+
+    return output;  // 返回解码后的字符串
+}
+
+static EVP_PKEY *private_key = NULL;
+static EVP_PKEY *public_key = NULL;
+
+std::string command_handler(const std::string &command)
+{
+    std::cout << "Received: " << command << std::endl;
+    if (command == "help")
+    {
+        return show_usage();
+    }
+    else if (command.substr(0, 7) == "encrypt")
+    {
+        std::string content = command.substr(8);
+        if (content.empty())
+        {
+            return "Error: No content provided for encryption.\n";
+        }
+        else
+        {
+            return base64_encode(encrypt(public_key, content)) + "\n";
+        }
+    }
+    else if (command.substr(0, 7) == "decrypt")
+    {
+        std::string content = command.substr(8);
+        if (content.empty())
+        {
+            return "Error: No content provided for decryption.\n";
+        }
+        else
+        {
+            return decrypt(private_key, base64_decode(content)) + "\n";
+        }
+    }
+    else
+    {
+        return "Error: Unknown command.\n";
+    }
+    return "";
+}
+
 int main(int argc, char *argv[])
 {
     if (argc < 2 || argv[1] == NULL)
     {
         std::cout << "Please give a seria name\n";
+        assert(0);
     }
     std::string port_name(argv[1]);
 
@@ -199,9 +294,6 @@ int main(int argc, char *argv[])
         generate_rsa_keypair(2048, private_key_file_name.c_str(),
                              public_key_file_name.c_str());
     }
-
-    EVP_PKEY *private_key = NULL;
-    EVP_PKEY *public_key = NULL;
 
     private_key = load_private_key(private_key_file_name.c_str());
     public_key = load_public_key(public_key_file_name.c_str());
@@ -220,43 +312,12 @@ int main(int argc, char *argv[])
 
     if (!serial.is_open()) return 1;
 
-    std::string buffer;
+    std::array<char, 1024> buffer;
     while (1)
     {
-        serial.read_some(boost::asio::buffer(buffer));
-        if (buffer == "help")
-        {
-            show_usage();
-        }
-        else if (buffer.substr(0, 7) == "encrypt")
-        {
-            std::string content = buffer.substr(8);
-            if (content.empty())
-            {
-                std::cout << "Error: No content provided for encryption.\n";
-            }
-            else
-            {
-                std::cout << encrypt(public_key, content) << std::endl;
-            }
-        }
-        else if (buffer.substr(0, 7) == "decrypt")
-        {
-            std::string content = buffer.substr(8);
-            if (content.empty())
-            {
-                std::cout << "Error: No content provided for decryption.\n";
-            }
-            else
-            {
-                std::cout << decrypt(private_key, content) << std::endl;
-            }
-        }
-        else
-        {
-            std::cout << "Unknown command. Type 'help' for usage.\n";
-        }
-
-        return 0;
+        auto size = serial.read_some(boost::asio::buffer(buffer));
+        std::string command(buffer.data(), size);
+        std::string response = command_handler(command);
+        serial.write_some(boost::asio::buffer(response));
     }
 }

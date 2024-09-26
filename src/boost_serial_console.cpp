@@ -1,8 +1,6 @@
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/serial_port.hpp>
-#include <cassert>
 #include <iostream>
-#include <thread>
 
 int main(int argc, char* argv[])
 {
@@ -27,23 +25,25 @@ int main(int argc, char* argv[])
 
     if (!serial.is_open()) return 1;
 
-    std::array<char, 1> cnt;
     boost::system::error_code ec;
+    std::string command;
+    std::string feedback;
+    feedback.resize(1024);
     while (1)
     {
-        /* Modify Code here */
-        serial.read_some(boost::asio::buffer(cnt), ec);
+        std::getline(std::cin, command);
+        serial.write_some(boost::asio::buffer(command), ec);
+        if (ec)
+        {
+            std::cerr << "Error when writing to " << port_name << std::endl;
+        }
+
+        auto size = serial.read_some(boost::asio::buffer(feedback), ec);
+        feedback.resize(size);
         if (ec)
         {
             std::cerr << "Error when reading to " << port_name << std::endl;
         }
-        else
-        {
-            std::cout << "Reading " << (int)cnt[0] << " from " << port_name
-                      << std::endl;
-        }
-        cnt[0]++;
-        using namespace std::chrono_literals;
-        std::this_thread::sleep_for(1s);
+        std::cout << "Feedback: \n" << feedback << std::endl;
     }
 }

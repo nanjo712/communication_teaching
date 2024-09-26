@@ -1,3 +1,4 @@
+#include <cassert>
 #include <iostream>
 #include <thread>
 
@@ -8,6 +9,7 @@ int main(int argc, char *argv[])
     if (argc < 2 || argv[1] == NULL)
     {
         std::cout << "Please give a seria name\n";
+        assert(0);
     }
 
     std::string serialName(argv[1]);

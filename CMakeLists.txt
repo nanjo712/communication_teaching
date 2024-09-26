@@ -40,7 +40,13 @@ add_executable(
 target_link_libraries(boost_serial_receiver PRIVATE Boost::system)
 
 add_executable(
-    boost_serial_tester
-    src/boost_serial_tester.cpp
+    boost_serial_backend
+    src/boost_serial_backend.cpp
 )
-target_link_libraries(boost_serial_tester PRIVATE Boost::system OpenSSL::SSL OpenSSL::Crypto)
+target_link_libraries(boost_serial_backend PRIVATE Boost::system OpenSSL::SSL OpenSSL::Crypto)
+
+add_executable(
+    boost_serial_console
+    src/boost_serial_console.cpp
+)
+target_link_libraries(boost_serial_console PRIVATE Boost::system)
