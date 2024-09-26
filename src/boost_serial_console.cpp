@@ -1,6 +1,5 @@
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/serial_port.hpp>
-#include <iostream>
 
 int main(int argc, char* argv[])
 {
@@ -24,7 +23,6 @@ int main(int argc, char* argv[])
     std::string command;
     while (1)
     {
-        std::getline(std::cin, command);
         /* Modify Code here */
     }
 }
