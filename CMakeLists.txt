@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.29)
+cmake_minimum_required(VERSION 3.22)
 
 project(COMMUNICATION_TEACHING LANGUAGES C CXX)
 
