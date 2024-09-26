@@ -1,7 +1,7 @@
-#include "native_system_handle/Serial.h"
-
 #include <iostream>
 #include <thread>
+
+#include "native_system_handle/Serial.h"
 
 int main(int argc, char *argv[])
 {
@@ -17,11 +17,12 @@ int main(int argc, char *argv[])
     while (1)
     {
         auto size = serial.write(&cnt, sizeof(cnt));
-        if (size != sizeof(cnt)) 
+        if (size != sizeof(cnt))
         {
             std::cout << "Error when writing to " << serialName << std::endl;
         }
-        else std::cout << "Writing " << cnt << " to " << serialName << std::endl;
+        else
+            std::cout << "Writing " << cnt << " to " << serialName << std::endl;
         using namespace std::chrono_literals;
         std::this_thread::sleep_for(1s);
         cnt++;

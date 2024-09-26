@@ -2,7 +2,10 @@ cmake_minimum_required(VERSION 3.29)
 
 project(COMMUNICATION_TEACHING LANGUAGES C CXX)
 
+set(EXPORT_COMPILE_COMMANDS ON)
+
 find_package(Boost REQUIRED CONFIG COMPONENTS system)
+find_package(OpenSSL REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -35,3 +38,9 @@ add_executable(
     src/boost_serial_receiver.cpp
 )
 target_link_libraries(boost_serial_receiver PRIVATE Boost::system)
+
+add_executable(
+    boost_serial_tester
+    src/boost_serial_tester.cpp
+)
+target_link_libraries(boost_serial_tester PRIVATE Boost::system OpenSSL::SSL OpenSSL::Crypto)

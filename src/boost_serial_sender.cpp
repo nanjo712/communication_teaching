@@ -16,9 +16,12 @@ int main(int argc, char* argv[])
 
     serial.set_option(boost::asio::serial_port::baud_rate(115200));
     serial.set_option(boost::asio::serial_port::character_size(8));
-    serial.set_option(boost::asio::serial_port::stop_bits(boost::asio::serial_port::stop_bits::one));
-    serial.set_option(boost::asio::serial_port::parity(boost::asio::serial_port::parity::none));
-    serial.set_option(boost::asio::serial_port::flow_control(boost::asio::serial_port::flow_control::none));
+    serial.set_option(boost::asio::serial_port::stop_bits(
+        boost::asio::serial_port::stop_bits::one));
+    serial.set_option(boost::asio::serial_port::parity(
+        boost::asio::serial_port::parity::none));
+    serial.set_option(boost::asio::serial_port::flow_control(
+        boost::asio::serial_port::flow_control::none));
 
     if (!serial.is_open()) return 1;
 
@@ -32,13 +35,13 @@ int main(int argc, char* argv[])
         {
             std::cerr << "Error when writing to " << port_name << std::endl;
         }
-        else 
+        else
         {
-            std::cout << "Writing " << (int)cnt[0] << " to " << port_name << std::endl;     
+            std::cout << "Writing " << (int)cnt[0] << " to " << port_name
+                      << std::endl;
         }
-        cnt[0] ++;
+        cnt[0]++;
         using namespace std::chrono_literals;
         std::this_thread::sleep_for(1s);
-    }    
-
+    }
 }
