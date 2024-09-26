@@ -35,18 +35,19 @@ socat会将这两个串口连接起来，数据从一个串口输入，会从另
 
 ### 实验三 串口通信应用实验
 
-运行boost_serial_backend，它会监听一个串口
+运行boost_serial_backend，它会监听/dev/ttyUSB0
 
-运行boost_serial_console，它会监听另一个串口
+backend的指令格式可以通过对该串口发送help获取
 
-在boost_serial_console中输入消息，消息会被发送到boost_serial_backend；
+运行boost_serial_console，它会监听/dev/ttyUSB1
 
-根据boost_serial_backend的回复，可以加密或者解密消息。
+**你需要实现boost_serial_console，其功能如下：**
 
-**你需要设计一个程序，参考boost_serial_console的实现，向backend发送指令加密如下信息：**
+- 接收用户输入指令，发送至backend
+- 接收backend的回复，打印到控制台
+
+向backend发送指令加密如下信息：
 ```
 BUPT-RobotTeam-学号
 ```
-**随后对你得到的密文进行解密。**
-**你可以通过比对解密后的明文和原文来你的串口通信程序是否正确。**
-
+根据密文构造解密指令，发送至backend解密
