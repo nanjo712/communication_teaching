@@ -7,7 +7,7 @@
 以sudo权限运行以下命令：
 
 ```bash
-./scripts/VirtualSerial.sh
+./script/VirtualSerial.sh
 ```
 
 该脚本会创建两个虚拟串口，分别是/dev/ttyUSB0和/dev/ttyUSB1。
