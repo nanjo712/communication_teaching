@@ -69,8 +69,10 @@ Server将绑定在本机的12345端口上，Client将连接到本机的12345端�
 
 **你需要实现boost_socket_server和boost_socket_client，其功能如下：**
 
+- Client将用户输入的字符串发送给Server
 - 向Server发送`time`，Server会返回当前时间
 - 向Server发送`echo <your string>`，Server会返回你发送的字符串
 - 向Server发送`exit`，Server会关闭连接，Client会退出
+- 向Server发送`help`，Server会返回帮助信息
 
 
