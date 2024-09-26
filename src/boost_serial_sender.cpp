@@ -30,7 +30,6 @@ int main(int argc, char* argv[])
     boost::system::error_code ec;
     while (1)
     {
-        /* Modify Code here */
         serial.write_some(boost::asio::buffer(cnt), ec);
         if (ec)
         {
