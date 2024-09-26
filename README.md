@@ -15,12 +15,12 @@ socat会将这两个串口连接起来，数据从一个串口输入，会从另
 
 ### 实验一 操作系统原生串口通信
 
-运行native_handle_receiver和native_handle_sender。
+运行Serial_receiver和Serial_sender。
 你需要为这两个程序分别指定串口设备名，例如：
 
 ```bash
-./native_handle_receiver /dev/ttyUSB0
-./native_handle_sender /dev/ttyUSB1
+./Serial_receiver /dev/ttyUSB0
+./Serial_sender /dev/ttyUSB1
 ```
 
 ### 实验二 使用ASIO库进行串口通信
