@@ -6,6 +6,7 @@ set(EXPORT_COMPILE_COMMANDS ON)
 
 find_package(Boost REQUIRED CONFIG COMPONENTS system)
 find_package(OpenSSL REQUIRED)
+find_package(Threads REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -32,22 +33,22 @@ add_executable(
     boost_serial_sender
     src/Serial/boost_serial_sender.cpp
 )
-target_link_libraries(boost_serial_sender PRIVATE Boost::system)
+target_link_libraries(boost_serial_sender PRIVATE Boost::system Threads::Threads)
 
 add_executable(
     boost_serial_receiver
     src/Serial/boost_serial_receiver.cpp
 )
-target_link_libraries(boost_serial_receiver PRIVATE Boost::system)
+target_link_libraries(boost_serial_receiver PRIVATE Boost::system Threads::Threads)
 
 add_executable(
     boost_serial_backend
     src/Serial/boost_serial_backend.cpp
 )
-target_link_libraries(boost_serial_backend PRIVATE Boost::system OpenSSL::SSL OpenSSL::Crypto)
+target_link_libraries(boost_serial_backend PRIVATE Boost::system OpenSSL::SSL OpenSSL::Crypto Threads::Threads)
 
 add_executable(
     boost_serial_console
     src/Serial/boost_serial_console.cpp
 )
-target_link_libraries(boost_serial_console PRIVATE Boost::system)
+target_link_libraries(boost_serial_console PRIVATE Boost::system Threads::Threads)
