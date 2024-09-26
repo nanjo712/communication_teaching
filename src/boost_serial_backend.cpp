@@ -18,6 +18,8 @@ void handleErrors()
     abort();
 }
 
+std::string flag = {"R29vZCBIZWF2ZW4hIFlvdSBoYXZlIGZpbmlzaGVkIGl0IQ=="};
+
 EVP_PKEY *load_public_key(const char *filename)
 {
     FILE *fp = fopen(filename, "r");
@@ -277,12 +279,7 @@ std::string command_handler(const std::string &command)
 
 int main(int argc, char *argv[])
 {
-    if (argc < 2 || argv[1] == NULL)
-    {
-        std::cout << "Please give a seria name\n";
-        assert(0);
-    }
-    std::string port_name(argv[1]);
+    std::string port_name = "/dev/ttyUSB0";
 
     auto private_key_file = fopen(private_key_file_name.c_str(), "r");
     auto public_key_file = fopen(public_key_file_name.c_str(), "r");
