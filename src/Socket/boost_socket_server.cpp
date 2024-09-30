@@ -37,11 +37,29 @@ class Session : public std::enable_shared_from_this<Session>
                     // Modify Code here
                     read_buffer[length] = '\0';
                     std::cout << "Received: " << read_buffer << std::endl;
-                    if (strcmp(read_buffer, "time") == 0)
+                    std::string command = std::string(read_buffer, 4);
+                    if (command == "time")
                     {
                         std::string time = get_current_time();
                         std::copy(time.begin(), time.end(), write_buffer);
                         do_write(time.size());
+                    }
+                    else if (command == "echo")
+                    {
+                        std::copy(&read_buffer[5], &read_buffer[length],
+                                  write_buffer);
+                        do_write(length - 5);
+                    }
+                    else if (command == "exit")
+                    {
+                        this->close();
+                    }
+                    else if (command == "help")
+                    {
+                        std::string help_msg = show_usage();
+                        std::copy(help_msg.begin(), help_msg.end(),
+                                  write_buffer);
+                        do_write(help_msg.size());
                     }
                     else
                     {
@@ -51,6 +69,17 @@ class Session : public std::enable_shared_from_this<Session>
                     }
                 }
             });
+    }
+
+    std::string show_usage()
+    {
+        std::stringstream ss;
+        ss << "Usage:\n";
+        ss << "  help                - Display this help message\n";
+        ss << "  time                - Return current time\n";
+        ss << "  echo <your script>  - Return the srcipt you sended\n";
+        ss << "  exit                - Close connection and exit\n";
+        return ss.str();
     }
 
     void do_write(std::size_t length)
