@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
 
     while (1) {
         std::string message = "";
-        std::cout << "Send > ";
+        std::cout << "\033[32mSend > \033[0m";
         std::getline(std::cin, message);
         // std::cout << std::endl;
 
@@ -31,18 +31,18 @@ int main(int argc, char* argv[])
 
         serial.write_some(boost::asio::buffer(message), ec);
         if (ec) {
-            std::cerr << "Error when writing to " << port_name << std::endl;
+            std::cerr << "\033[34mError when writing to " << port_name << "\033[0m" << std::endl;
         }
         else {
-            std::cout << "Writing '" << message << "' to " << port_name
-                      << std::endl;
+            std::cout << "\033[34mWriting '" << message << "' to " << port_name
+                      << "\033[0m" << std::endl;
         }
 
         std::array<char, 1024> responseBuffer;
         while (1) {
             auto size = serial.read_some(boost::asio::buffer(responseBuffer));
             std::string response(responseBuffer.data(), size);
-            std::cout << "Response < " << response << std::endl;
+            std::cout << "\033[32mResponse < \033[0m" << response << std::endl;
             break;
         }
     }
