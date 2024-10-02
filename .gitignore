@@ -1,2 +1,6 @@
 .cache
 build
+CMakeCache.txt
+private.pem
+public.pem
+CMakeFiles/**
