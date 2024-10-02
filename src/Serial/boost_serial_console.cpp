@@ -29,21 +29,25 @@ int main(int argc, char* argv[])
 
         boost::system::error_code ec;
 
-        serial.write_some(boost::asio::buffer(message), ec);
-        if (ec) {
-            std::cerr << "\033[34mError when writing to " << port_name << "\033[0m" << std::endl;
-        }
-        else {
-            std::cout << "\033[34mWriting '" << message << "' to " << port_name
-                      << "\033[0m" << std::endl;
-        }
+        if (message == "") {
+            std::cout << "\033[34mPlease input a command\033[0m" << std::endl;
+        } else {
+            serial.write_some(boost::asio::buffer(message), ec);
+            if (ec) {
+                std::cerr << "\033[34mError when writing to " << port_name << "\033[0m" << std::endl;
+            }
+            else {
+                std::cout << "\033[34mWriting '" << message << "' to " << port_name
+                        << "\033[0m" << std::endl;
+            }
 
-        std::array<char, 1024> responseBuffer;
-        while (1) {
-            auto size = serial.read_some(boost::asio::buffer(responseBuffer));
-            std::string response(responseBuffer.data(), size);
-            std::cout << "\033[32mResponse < \033[0m" << response << std::endl;
-            break;
+            std::array<char, 1024> responseBuffer;
+            while (1) {
+                auto size = serial.read_some(boost::asio::buffer(responseBuffer));
+                std::string response(responseBuffer.data(), size);
+                std::cout << "\033[32mResponse < \033[0m" << response << std::endl;
+                break;
+            }
         }
     }
 }
