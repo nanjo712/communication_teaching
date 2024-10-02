@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
     while (1) {
         std::string message = "";
         std::cout << "Send > ";
-        std::cin >> message;
+        std::getline(std::cin, message);
         // std::cout << std::endl;
 
         boost::system::error_code ec;
