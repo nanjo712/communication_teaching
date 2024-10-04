@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
         std::cout << "Sent: " << initial_message << std::endl;
 
         // 接收回复
-        char reply[1024];
+        char reply[2077];
         size_t reply_length = boost::asio::read(serial, boost::asio::buffer(reply, sizeof(reply)));
         
         // 输出收到的回复
