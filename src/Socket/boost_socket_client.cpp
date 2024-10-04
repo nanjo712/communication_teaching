@@ -1,6 +1,7 @@
 #include <boost/asio.hpp>
 #include <boost/asio/read.hpp>
 #include <iostream>
+#include<stdio.h>
 
 int main()
 {
@@ -15,6 +16,17 @@ int main()
     response.resize(1024);
     socket.read_some(boost::asio::buffer(response));
     std::cout << "Response: " << response << std::endl;
+//我开始写
+char yonghushuru[128];
+printf("enter:");
+std::cin.getline(yonghushuru,128);
+socket.write_some(boost::asio::buffer(yonghushuru));
+response.resize(1024);
+socket.read_some(boost::asio::buffer(response));
+    std::cout << "Response: " << response << std::endl;
+
+printf("send:%s",yonghushuru);
+
 
     return 0;
 }

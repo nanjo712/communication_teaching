@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
         size_t reply2_length = boost::asio::read(serial, boost::asio::buffer(reply2, sizeof(reply2)));
        //显示 回复
        printf("message:");
-        std::cout.write(reply, reply_length);
+        std::cout.write(reply2, reply2_length);
         printf("\n");
        
        
