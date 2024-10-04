@@ -19,7 +19,7 @@ class SerialConsole
 
     void start()
     {
-        while (!stop_requested)
+        while (true)
         {
             std::cout << "$ ";
             std::cin >> m_command;
@@ -63,31 +63,13 @@ class SerialConsole
         }
     }
 
-    static bool stop_requested;
-
    private:
-    static void handleSignal(const boost::system::error_code& ec,
-                             int signal_number, boost::asio::io_context& ioc)
-    {
-        static std::atomic_bool ishandling(false);
-        if (ishandling) return;
-        if (!ec)
-        {
-            ishandling = true;
-            SerialConsole::stop_requested = true;
-            ioc.stop();
-        }
-    }
-
     std::shared_ptr<boost::asio::serial_port> m_serial_port;
-    std::shared_ptr<boost::asio::signal_set> m_signals;
     std::string m_command;
     std::string m_info;
     std::string m_request;
     std::array<char, 1024> m_buffer;
 };
-
-bool SerialConsole::stop_requested = false;
 
 int main()
 {
