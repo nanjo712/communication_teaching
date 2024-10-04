@@ -1,7 +1,8 @@
-#include <boost/asio/io_context.hpp>
-#include <boost/asio/serial_port.hpp>
+#include <boost/asio.hpp>
+#include <iostream>
 #include <string>
 
+using boost::asio::serial_port;
 
 int main(int argc, char* argv[])
 {
