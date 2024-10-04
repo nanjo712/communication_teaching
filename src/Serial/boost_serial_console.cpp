@@ -1,40 +1,102 @@
+#include <atomic>
+#include <boost/asio.hpp>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/serial_port.hpp>
 #include <iostream>
 #include <string>
+#include <thread>
 
-int main(int argc, char* argv[])
+class SerialConsole
+{
+   public:
+    SerialConsole(boost::asio::io_context& ioc, std::string port_name)
+    {
+        m_serial_port = std::make_shared<boost::asio::serial_port>(
+            boost::asio::serial_port(ioc, port_name));
+    }
+
+    ~SerialConsole() { m_serial_port->close(); }
+
+    void start()
+    {
+        while (!stop_requested)
+        {
+            std::cout << "$ ";
+            std::cin >> m_command;
+            if (std::cin.fail())
+            {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(),
+                                '\n');
+                break;
+            }
+            if (m_command == "exit")
+            {
+                std::cout << "Exit..." << std::endl;
+                break;
+            }
+            if (m_command != "encrypt" && m_command != "decrypt" &&
+                m_command != "help")
+            {
+                std::cerr << "Wrong command usgae" << std::endl;
+                m_info.clear();
+                m_request = "help";
+            }
+            else if (m_command != "help")
+            {
+                std::cin >> m_info;
+                m_request = m_command + " " + m_info;
+            }
+            else
+            {
+                m_info.clear();
+                m_request = m_command;
+            }
+            /* backend parse the info to be encrypted or decryped started from
+            the index 8, which means you should add a space or any other
+            character to occupy this pos.*/
+            m_serial_port->write_some(boost::asio::buffer(m_request));
+            auto read_size =
+                m_serial_port->read_some(boost::asio::buffer(m_buffer));
+            std::string response = std::string(m_buffer.data(), read_size);
+            std::cout << response << std::endl;
+        }
+    }
+
+    static bool stop_requested;
+
+   private:
+    static void handleSignal(const boost::system::error_code& ec,
+                             int signal_number, boost::asio::io_context& ioc)
+    {
+        static std::atomic_bool ishandling(false);
+        if (ishandling) return;
+        if (!ec)
+        {
+            ishandling = true;
+            SerialConsole::stop_requested = true;
+            ioc.stop();
+        }
+    }
+
+    std::shared_ptr<boost::asio::serial_port> m_serial_port;
+    std::shared_ptr<boost::asio::signal_set> m_signals;
+    std::string m_command;
+    std::string m_info;
+    std::string m_request;
+    std::array<char, 1024> m_buffer;
+};
+
+bool SerialConsole::stop_requested = false;
+
+int main()
 {
     std::string port_name = "/dev/ttyUSB1";
-    // "BUPT-RobotTeam-2023211735"
-    std::string my_info = argv[2];
 
     boost::asio::io_context io_context;
-    boost::asio::serial_port serial_port(io_context, port_name);
 
-    std::string command;
-    std::array<char, 1024> buffer;
-
-    /* TODO: decrypt core dumped */
-    if (memcmp(argv[1], "encrypt", 7) == 0 ||
-        memcmp(argv[1], "decrypt", 7) == 0 || memcmp(argv[1], "help", 4) == 0)
-    {
-        command = argv[1];
-    }
-    else
-    {
-        std::cerr << "Wrong command usgae" << std::endl;
-        return 1;
-    }
-
-    /* backend parse the info to be encrypted or decryped started from the index
-    8, which means you should add a space or any other character to occupy this
-    pos.
-     */
-    serial_port.write_some(boost::asio::buffer(command + " " + my_info));
-    auto read_size = serial_port.read_some(boost::asio::buffer(buffer));
-    std::string response = std::string(buffer.data(), read_size);
-    std::cout << response << std::endl;
+    SerialConsole console = SerialConsole(io_context, port_name);
+    console.start();
 
     return 0;
 }
