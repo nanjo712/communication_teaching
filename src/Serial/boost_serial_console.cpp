@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
         // 打开串口
         serial_port serial(io_context, port_name);
         
-        // 设置串口参数(与backend中相同)
+        // 设置串口参数（复制于backend）
         serial.set_option(boost::asio::serial_port::baud_rate(115200));
         serial.set_option(boost::asio::serial_port::character_size(8));
         serial.set_option(boost::asio::serial_port::stop_bits(boost::asio::serial_port::stop_bits::one));
@@ -28,33 +28,34 @@ int main(int argc, char* argv[])
         boost::asio::write(serial, boost::asio::buffer(initial_message));
         std::cout << "Sent: " << initial_message << std::endl;
 
-        // 接收回复（这里收到密文？）
-        char reply[2077];
+        // 接收回复
+        char reply[3000];
         size_t reply_length = boost::asio::read(serial, boost::asio::buffer(reply, sizeof(reply)));
         
-        // 输出收到的回复
+        // 输出收到的回复(这是密文？)
         std::cout << "Received: ";
-        char reply[2077];
-        size_t reply_length = boost::asio::read(serial, boost::asio::buffer(reply, sizeof(reply)));
+        std::cout.write(reply, reply_length);
+        std::cout << std::endl;
 
-        // 构造decrypt命令
+        // 构造decrypt命令（解密）
         std::string decrypt_command = "decrypt ";
         std::string content(reply, reply_length);  // 将回复转换为字符串
         decrypt_command += content;  // 追加接收到的内容
 
+        
         // 再次发送decrypt命令
         boost::asio::write(serial, boost::asio::buffer(decrypt_command));
         std::cout << "Sent modified command: " << decrypt_command << std::endl;
 
-        //这里收到回复显示出来
-        printf("message:\n");
-        char reply2[2077];
+        // 接收回复（明文和字符串）
+        char reply2[3000];
         size_t reply2_length = boost::asio::read(serial, boost::asio::buffer(reply2, sizeof(reply2)));
-
-
-        
-        
-        
+       //显示 回复
+       printf("message:");
+        std::cout.write(reply, reply_length);
+        printf("\n");
+       
+       
         // 关闭串口
         serial.close();
     } catch (const std::exception& e) {
