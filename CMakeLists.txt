@@ -4,11 +4,14 @@ project(COMMUNICATION_TEACHING LANGUAGES C CXX)
 
 set(EXPORT_COMPILE_COMMANDS ON)
 
+include_directories(include)
+
 find_package(Boost REQUIRED CONFIG COMPONENTS system)
 find_package(OpenSSL REQUIRED)
 find_package(Threads REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_library(
     Utils
