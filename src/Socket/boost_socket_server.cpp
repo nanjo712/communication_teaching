@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <iostream>
 #include <memory>
+#include<cstdlib>
 
 using boost::asio::ip::tcp;
 
@@ -43,6 +44,26 @@ class Session : public std::enable_shared_from_this<Session>
                         std::copy(time.begin(), time.end(), write_buffer);
                         do_write(time.size());
                     }
+                    
+//从这里开始 help         
+else if(strcmp(read_buffer, "help") == 0)
+{char help[1024]="Client发送echo <content>返回content,发送time返回时间,发送exit退出";
+std::copy(help, help+strlen(help), write_buffer);
+do_write(strlen(help));}
+//exit
+else if(strcmp(read_buffer, "exit") == 0)
+{    char EXIT[5]="EXIT";
+    std::copy(EXIT, EXIT+strlen(EXIT), write_buffer);
+    do_write(strlen(EXIT));
+    close();  
+    }
+else if(strncmp(read_buffer,"echo ",5)==0)
+{char newstr[128];
+ strcpy(newstr, read_buffer + 5);
+ std::copy(newstr, newstr+strlen(newstr), write_buffer);
+    do_write(strlen(newstr));}
+
+
                     else
                     {
                         std::copy(read_buffer, read_buffer + length,
