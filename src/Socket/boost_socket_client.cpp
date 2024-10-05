@@ -17,19 +17,23 @@ int main()
    response.resize(1024);
     socket.read_some(boost::asio::buffer(response));
     std::cout << "Response: " << response << std::endl;
+    response.resize(1024);
 //从这里开始
 //发送功能
-char yonghushuru[128];
- printf("enter:");
+while(1)
+{char yonghushuru[128];
+printf("************");
+ printf("\n*enter:\n");
 std::cin.getline(yonghushuru,128);
 socket.write_some(boost::asio::buffer(yonghushuru));
 response.resize(1024);
 socket.read_some(boost::asio::buffer(response));
     std::cout << "Response: " << response << std::endl;
+response.resize(1024);
  //退出功能    
 if(response=="EXIT")
 exit(0);
-printf("send:%s",yonghushuru);
+printf("\n发送成功:%s\n",yonghushuru);}
 
 
     return 0;

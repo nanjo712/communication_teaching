@@ -44,9 +44,10 @@ class Session : public std::enable_shared_from_this<Session>
                         std::copy(time.begin(), time.end(), write_buffer);
                         do_write(time.size());
                     }
+                    
 //从这里开始 help         
 else if(strcmp(read_buffer, "help") == 0)
-{char help[1024]="Client发送exit time echo<>";
+{char help[1024]="Client发送echo <content>返回content,发送time返回时间,发送exit退出";
 std::copy(help, help+strlen(help), write_buffer);
 do_write(strlen(help));}
 //exit
