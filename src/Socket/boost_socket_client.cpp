@@ -9,12 +9,17 @@ int main()
     boost::asio::ip::tcp::resolver resolver(io_context);
     boost::asio::connect(socket, resolver.resolve("localhost", "12345"));
 
-    std::string message = "time";
-    socket.write_some(boost::asio::buffer(message));
-    std::string response;
-    response.resize(1024);
-    socket.read_some(boost::asio::buffer(response));
-    std::cout << "Response: " << response << std::endl;
+    std::string message;
+    while (true)
+    {
+        std::cout << "Send > ";
+        std::getline(std::cin, message);
+        socket.write_some(boost::asio::buffer(message));
+        std::string response;
+        response.resize(1024);
+        socket.read_some(boost::asio::buffer(response));
+        std::cout << "Response: " << response << std::endl;
+    }
 
     return 0;
 }
