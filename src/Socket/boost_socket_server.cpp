@@ -1,7 +1,9 @@
 #include <boost/asio.hpp>
+#include <functional>
 #include <iomanip>
 #include <iostream>
 #include <memory>
+#include <string>
 
 using boost::asio::ip::tcp;
 
@@ -14,6 +16,33 @@ std::string get_current_time()
     std::ostringstream oss;
     oss << std::put_time(local_time, "%Y-%m-%d %H:%M:%S");
     return oss.str();
+}
+
+std::string command_handler(const std::string& command,
+                            const std::function<void()>& close_callback)
+{
+    if (command == "time")
+    {
+        return get_current_time();
+    }
+    else if (command.substr(0, 5) == "echo ")
+    {
+        return command.substr(5);
+    }
+    else if (command == "exit")
+    {
+        close_callback();
+        return "";
+    }
+    else if (command == "help")
+    {
+        return "Available commands: time, echo <message>, exit";
+    }
+    else
+    {
+        return "Unknown command";
+    }
+    return "";
 }
 
 class Session : public std::enable_shared_from_this<Session>
@@ -37,18 +66,23 @@ class Session : public std::enable_shared_from_this<Session>
                     // Modify Code here
                     read_buffer[length] = '\0';
                     std::cout << "Received: " << read_buffer << std::endl;
-                    if (strcmp(read_buffer, "time") == 0)
-                    {
-                        std::string time = get_current_time();
-                        std::copy(time.begin(), time.end(), write_buffer);
-                        do_write(time.size());
-                    }
-                    else
-                    {
-                        std::copy(read_buffer, read_buffer + length,
-                                  write_buffer);
-                        do_write(length);
-                    }
+                    std::string command(read_buffer);
+                    // if (strcmp(read_buffer, "time") == 0)
+                    // {
+                    //     std::string time = get_current_time();
+                    //     std::copy(time.begin(), time.end(), write_buffer);
+                    //     do_write(time.size());
+                    // }
+                    // else
+                    // {
+                    //     std::copy(read_buffer, read_buffer + length,
+                    //               write_buffer);
+                    //     do_write(length);
+                    // }
+                    std::string response =
+                        command_handler(read_buffer, [this]() { close(); });
+                    std::copy(response.begin(), response.end(), write_buffer);
+                    do_write(response.size());
                 }
             });
     }
