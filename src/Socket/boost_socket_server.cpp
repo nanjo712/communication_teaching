@@ -37,18 +37,36 @@ class Session : public std::enable_shared_from_this<Session>
                     // Modify Code here
                     read_buffer[length] = '\0';
                     std::cout << "Received: " << read_buffer << std::endl;
+                    std::string response;
                     if (strcmp(read_buffer, "time") == 0)
                     {
-                        std::string time = get_current_time();
-                        std::copy(time.begin(), time.end(), write_buffer);
-                        do_write(time.size());
+                        response = get_current_time();
+                    }
+                    else if (strncmp(read_buffer, "echo ", 5) == 0)
+                    {
+                        response = std::string(read_buffer + 5);
+                    }
+                    else if (strcmp(read_buffer, "exit") == 0)
+                    {
+                        close();
+                        return;
+                    }
+                    else if (strcmp(read_buffer, "help") == 0)
+                    {
+                        response = "\n------------------------------------------------\n"
+                                   "Commands:\n"
+                                   "time               \t- get current time\n"
+                                   "echo <your string> \t- echo back your string\n"
+                                   "exit               \t- close the connection\nn"
+                                   "help               \t- show this help message\n"
+                                   "------------------------------------------------";
                     }
                     else
                     {
-                        std::copy(read_buffer, read_buffer + length,
-                                  write_buffer);
-                        do_write(length);
+                        response = "Unknown command. Type 'help' for a list of commands.";
                     }
+                    std::copy(response.begin(), response.end(), write_buffer);
+                    do_write(response.size());
                 }
             });
     }
